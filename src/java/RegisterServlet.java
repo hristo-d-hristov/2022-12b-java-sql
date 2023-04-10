@@ -20,20 +20,25 @@ public class RegisterServlet extends HttpServlet {
             throws ServletException, IOException {
         String user = request.getParameter("user");
         String pass = request.getParameter("pass");
+        String mail = request.getParameter("mail");
         
         try {
             Class.forName("org.mariadb.jdbc.Driver");
             Connection conn = DriverManager.getConnection(
                 "jdbc:mariadb://localhost/traktori");
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM marki");
+//            ResultSet rs = stmt.executeQuery("SELECT * FROM marki");
+            String q = String.format(
+          "INSERT INTO potrebiteli VALUES (\"%s\", \"%s\", \"%s\")",
+                    user, pass, mail);
+            ResultSet rs = stmt.executeQuery(q);
             conn.close();
             
-            while(rs.next()) {
-                int id = rs.getInt(1);
-                String marka = rs.getString(2);
-                response.getWriter().println(id + " " + marka);
-            }
+//            while(rs.next()) {
+//                int id = rs.getInt(1);
+//                String marka = rs.getString(2);
+//                response.getWriter().println(id + " " + marka);
+//            }
         } catch (ClassNotFoundException ex) {
             Logger.getLogger(RegisterServlet.class.getName()).log(Level.SEVERE, null, ex);
         } catch (SQLException ex) {
